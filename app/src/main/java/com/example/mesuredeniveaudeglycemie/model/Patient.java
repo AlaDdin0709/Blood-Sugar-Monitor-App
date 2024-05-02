@@ -1,57 +1,125 @@
 package com.example.mesuredeniveaudeglycemie.model;
 
+import org.json.JSONArray;
+
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Patient {
 
-    private int age;
-    private float valeur;
-    private boolean isFasting;
-    private String result;
+    private Date dateMesure; // Date de la mesure
+    private int age; // Âge du patient
+    private float valeurMesuree; // Valeur de glycémie mesurée
+    private boolean isFasting; // Indique si le patient était à jeun
+    private static String reponse; // Réponse générée à partir des données du patient
 
-
-    //Flèche "Update" Controller --> Model
-
-    public Patient(int age, float valeur, boolean isFasting) {
-        this.age = age;
-        this.valeur = valeur;
-        this.isFasting = isFasting;
-        setResult();
+    // Constructeur par défaut (sans arguments)
+    public Patient() {
     }
 
-    public void setResult() {
+    // Constructeur principal (pour créer un nouvel objet Patient)
+    // Flèche "Update" Controller --> Model
+    public Patient(Date date, int age, float valeurMesuree, boolean isFasting) {
+        dateMesure = date;
+        this.age = age;
+        this.valeurMesuree = valeurMesuree;
+        this.isFasting = isFasting;
 
-        if (isFasting) {
-            if ((age < 7) && (valeur >= 5.5 && valeur <= 10)) {
-                result = "niveau de glycemi est normal";
-            } else if ((age < 7) && (valeur < 5.5)) {
-                result = "niveau de glycemi est trop bas";
-            } else {
-                if (age >= 7 && age < 13 && (valeur >= 5 && valeur <= 10)) {
-                    result = "niveau de glycemi est normal";
-                } else if (age >= 7 && age < 13 && (valeur < 5)) {
-                    result = "niveau de glycemi est trop bas";
+        // Calculer la réponse en fonction des données du patient
+        calculer();
+    }
+
+    // Méthode privée pour calculer la réponse en fonction des données du patient
+    private void calculer() {
+        if (isFasting) { // Si le patient était à jeun
+            if (age >= 13) { // Cas pour les patients âgés de 13 ans ou plus
+                if (valeurMesuree < 5.0f) {
+                    reponse = "Niveau de glycémie est trop bas";
+                } else if (valeurMesuree >= 5.0f && valeurMesuree <= 7.2f) {
+                    reponse = "Niveau de glycémie est normale";
                 } else {
-
-                    if (age >= 13 && (valeur >= 5 && valeur <= 7.2)) {
-                        result = "niveau de glycemi est normal";
-                    } else if (age >= 13 && (valeur < 5)) {
-                        result = "niveau de glycemi est tros bas";
-                    } else
-                        result = "niveau de glycemi est tres éleves";
+                    reponse = "Niveau de glycémie est trop élevé";
+                }
+            } else if (age >= 6 && age <= 12) { // Cas pour les patients âgés de 6 à 12 ans
+                if (valeurMesuree < 5.0f) {
+                    reponse = "Niveau de glycémie est trop bas";
+                } else if (valeurMesuree >= 5.0f && valeurMesuree <= 10.0f) {
+                    reponse = "Niveau de glycémie est normale";
+                } else {
+                    reponse = "Niveau de glycémie est trop élevé";
+                }
+            } else if (age < 6) { // Cas pour les patients âgés de moins de 6 ans
+                if (valeurMesuree < 5.5f) {
+                    reponse = "Niveau de glycémie est trop bas";
+                } else if (valeurMesuree >= 5.5f && valeurMesuree <= 10.0f) {
+                    reponse = "Niveau de glycémie est normale";
+                } else {
+                    reponse = "Niveau de glycémie est trop élevé";
                 }
             }
-        } else if (!isFasting) {
-            if (age >= 13 && (valeur <= 10.5)) {
-                result = "niveau de glycemi est normal";
-            } else
-                result = "niveau de glycemi est tres éleves";
-        } else {
-            result = "Erreuuur!!!!";
+        } else { // Si le patient n'était pas à jeun
+            if (valeurMesuree < 5.5f) {
+                reponse = "Niveau de glycémie est trop bas";
+            } else if (valeurMesuree > 10.5f) {
+                reponse = "Niveau de glycémie est trop élevé";
+            } else {
+                reponse = "Ce niveau de glycémie est normale après les repas";
+            }
         }
     }
 
-    //Flèche "Modify" Model --> Controller
-    public String getResult() {
-        return result;
+    // Accesseurs pour les attributs du patient
+    public int getAge() {
+        return age;
     }
-}
 
+    public float getValeurMesuree() {
+        return valeurMesuree;
+    }
+
+    public boolean isFasting() {
+        return isFasting;
+    }
+
+    public Date getDate() {
+        return dateMesure;
+    }
+
+    // Méthode pour récupérer la réponse générée
+    // Flèche "Notify" Model --> Controller
+    public String getReponse() {
+        return reponse;
+    }
+
+    // Mutateurs pour les attributs du patient
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setValeurMesuree(float valeurMesuree) {
+        this.valeurMesuree = valeurMesuree;
+    }
+
+    public void setFasting(boolean fasting) {
+        isFasting = fasting;
+        calculer(); // Recalculer la réponse si le statut de
+
+    }
+
+    /**
+     * conversion du patient en format JSONArray
+     * @return
+     */
+    public JSONArray convertToJSONArray (){
+        List laListe = new ArrayList<>();
+        laListe.add(dateMesure);
+        laListe.add(age);
+        laListe.add(isFasting);
+        laListe.add(valeurMesuree);
+        return new JSONArray(laListe);
+    }
+
+
+
+}

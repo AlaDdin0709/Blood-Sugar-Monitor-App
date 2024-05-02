@@ -33,6 +33,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:max="120" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/black"
+        android:background="@drawable/line_shape" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,17 +89,5 @@
         android:text="Consulter"
         android:textColor="@color/black"
         android:textSize="18sp" />
-    <TextView
-        android:id="@+id/tvReponse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:lineSpacingExtra="10sp"
-        android:padding="40dp"
-        android:text="..."
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+
 </LinearLayout>
