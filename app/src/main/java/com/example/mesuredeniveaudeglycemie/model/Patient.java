@@ -119,7 +119,4 @@ public class Patient {
         laListe.add(valeurMesuree);
         return new JSONArray(laListe);
     }
-
-
-
 }

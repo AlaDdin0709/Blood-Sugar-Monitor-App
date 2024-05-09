@@ -110,9 +110,6 @@ public class AccessLocal {
         // Requête pour récupérer le dernier patient enregistré
         // COL_DATE_MESURE (TEXT PRIMARY KEY)
         // COL_AGE (INTEGER NOT NULL)
-
-
-
         openForRead();
         Cursor c = bd.query(
                 TABLE_NAME,
